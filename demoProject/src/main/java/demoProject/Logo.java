@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 public class Logo {
     public static final Image IMAGE;
 	static {
-        try(InputStream logoStream = Logo.class.getResourceAsStream("/logo.png")) {
+        try(InputStream logoStream = Logo.class.getResourceAsStream("/config/logo.png")) {
             if(logoStream == null) {
             	throw new RuntimeException("Resource logo.png not found.");
             }

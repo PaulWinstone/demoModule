@@ -17,6 +17,8 @@ plugins {
     id 'org.beryx.runtime' version '1.9.1'
 }
 
+buildDir = 'c:\\demoModuleBuild'
+
 repositories {
     jcenter()
 }
@@ -38,7 +40,8 @@ javafx {
 
 application {
     mainClass = "demoProject.Launcher"
-    applicationName = 'demoProject'
+    applicationName = "${customerId}-${version}"
+    version = '06.04.100'
     applicationDefaultJvmArgs = [
     	'-Dsun.io.serialization.extendedDebugInfo=true', 
     	'-showversion', 
@@ -62,15 +65,24 @@ runtime {
     
     jpackage {
     	// remove this line to also create installers:
-    	skipInstaller = true
-    	outputDir = "jpackage/$customerId"
+    	//skipInstaller = false
+    	imageOptions = ['--icon', 'images/demo.ico']
+    	
+    	imageName = "${customerId}-${version}"
+		installerName = "${customerId}-${version}"
+		outputDir = "jpackage/${customerId}-${version}"
+        installerType = 'msi'
+
+        installerOptions = ['--win-per-user-install', '--win-dir-chooser', '--win-menu', '--win-shortcut']
     }
 }
 
 
 tasks.processResources {
-	from "config/$customerId"
-	into sourceSets.main.java.outputDir
+	into "$buildDir"
+	from ("config/$customerId"){
+		into "config"
+	}
 }
 
 tasks.installDist {
@@ -98,10 +110,12 @@ tasks.jpackageImage {
 	}
 }
 
+def customers = ["amazon","google"]
+ 
 task jpackageAll(group: 'distribution', description: 'Creating packages for all customers') {
 	doFirst {
-		file("config").eachDir {
-			def customer = it.name
+		customers.each {
+			def customer = it
             GradleRunner.create()
                     .withDebug(true)
                     .withProjectDir(projectDir)

@@ -7,7 +7,7 @@ import java.util.Properties;
 public class CustomerConfig {
     private static final Properties CUSTOMER_PROPS = new Properties();
 	static {
-        try(InputStream customerStream = CustomerConfig.class.getResourceAsStream("/customer.properties")) {
+        try(InputStream customerStream = CustomerConfig.class.getResourceAsStream("/config/customer.properties")) {
             if(customerStream == null) {
             	throw new RuntimeException("Resource customer.properties not found.");
             }
